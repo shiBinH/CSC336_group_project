@@ -14,20 +14,23 @@ module.exports = (connection) => {
       const USERNAME = req.body.username;
       const PASSWORD = req.body.password;
       
-      const QUERY = ' SELECT ' +
+      const QUERY = ' SELECT '
                     '   *' +
                     ' FROM ' + 
                     '   User, User_Type' +
                     ' WHERE' +
-                    '   User.username=' + '"' + USERNAME + '"' +
+                    '   User.username=? ' +
                     '   AND' +
-                    '   User.password=' + '"' + PASSWORD + '"' +
+                    '   User.password=? ' +
                     '   AND' +
                     '   User_Type.type_ID=User.user_type'
                     ' ;';
       
       connection.query(
+        
         QUERY,
+        
+        [USERNAME, PASSWORD],
         
         (error, results, fields) => {
           if (error) {
@@ -37,6 +40,8 @@ module.exports = (connection) => {
             res.json(error);
             
           } else {
+            
+            console.log(results)
             
             if (results.length === 0) {
               console.log('not found');
